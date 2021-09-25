@@ -3,11 +3,12 @@ import * as S from "./styles";
 
 interface Props {
     title: string;
+    onPress: () => void;
 }
 
-export function CategorySelect({title}:Props){
+export function CategorySelectButton({title,onPress}:Props){
     return (
-        <S.Container>
+        <S.Container onPress={onPress}>
             <S.Category>{title}</S.Category>
             <S.Icon name="chevron-down"/>
            
