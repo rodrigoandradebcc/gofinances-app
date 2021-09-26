@@ -11,7 +11,6 @@ export function CategorySelectButton({title,onPress}:Props){
         <S.Container onPress={onPress}>
             <S.Category>{title}</S.Category>
             <S.Icon name="chevron-down"/>
-           
         </S.Container>
     )
 }
