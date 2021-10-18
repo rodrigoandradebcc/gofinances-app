@@ -9,6 +9,7 @@ import { CategorySelect } from '../CategorySelect';
 import * as Styled from './styles';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface FormData {
     name: string;
@@ -27,6 +28,9 @@ export function Register(){
         key: 'category',
         name: 'Categoria',
     })
+
+    const dataKey = '@gofinances:transactions';
+
     const [transactionType, setTransactionType] = useState('')
     const [categoryModalOpen, setCategoryModalOpen] = useState(false)
 
@@ -51,7 +55,7 @@ export function Register(){
         setTransactionType(type)
     }
 
-    function handleRegister(form: FormData){
+    async function handleRegister(form: FormData){
         if(!transactionType)
             return Alert.alert('Selecione o tipo de transação');
 
@@ -66,7 +70,13 @@ export function Register(){
             category: category.key,
         }
 
-        console.log(data)
+        try {
+            await AsyncStorage.setItem(dataKey, JSON.stringify(data));
+
+        } catch (error) {
+            console.log(error);
+            Alert.alert("Não foi possível cadastrar")
+        }
     }
 
     return (
