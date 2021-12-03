@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/core';
+import React, { useState, useEffect, useCallback } from 'react';
 import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
 import * as S from './styles';
@@ -50,6 +51,10 @@ export function Dashboard(){
         console.log('lalala',data)
         loadTransactions();
     },[])
+
+    useFocusEffect(useCallback(()=>{
+        loadTransactions();
+    },[]));
 
     return (
         <S.Container>
@@ -102,7 +107,6 @@ export function Dashboard(){
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => <TransactionCard data={item}/>} 
                 />
-            <S.Title>Listagem</S.Title>
 
 
             </S.Transactions> 
