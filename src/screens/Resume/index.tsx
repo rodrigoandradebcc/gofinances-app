@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { HistoryCard } from '../../components/HistoryCard';
 import { categories } from '../../utils/categories';
 import * as S from './styles';
@@ -9,8 +9,8 @@ import { useTheme } from 'styled-components';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { addMonths, subMonths, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import locale from 'yup/lib/locale';
-import { getMonth } from 'date-fns/esm';
+import { ActivityIndicator } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface TransactionData {
     type: 'positive' | 'negative'
@@ -30,12 +30,14 @@ interface CategoryData {
 }
 
 export function Resume(){
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
 
     const theme = useTheme();
 
     function handleDateChange(action: 'next' | 'prev'){
+
         if(action == 'next'){
             const newDate = addMonths(selectedDate, 1);
             setSelectedDate(newDate)
@@ -46,6 +48,8 @@ export function Resume(){
     }
 
     async function loadData(){
+        setIsLoading(true);
+
         const dataKey = '@gofinances:transactions';
         const response = await AsyncStorage.getItem(dataKey);
         const responseFormatted = response ? JSON.parse(response) : [];
@@ -94,17 +98,27 @@ export function Resume(){
         });
 
         setTotalByCategories(totalByCategory);
+        setIsLoading(false);
     }
 
-    useEffect(()=>{
+
+
+    useFocusEffect(useCallback(()=>{
         loadData();
-    },[selectedDate])
+    },[selectedDate]));
 
     return (
         <S.Container>
+            
             <S.Header>
                 <S.Title>Resumo por categoria</S.Title>
             </S.Header>
+            {
+            isLoading ? 
+                    <S.LoadContainer>
+                        <ActivityIndicator color={theme.colors.primary} size="large"/>
+                    </S.LoadContainer> 
+                    : 
             <S.Content
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
@@ -150,6 +164,7 @@ export function Resume(){
                     />
                 ))}
             </S.Content>
+            }
         </S.Container>
     )
 }                                                                                                                                              
