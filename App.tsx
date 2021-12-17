@@ -30,7 +30,8 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <NavigationContainer>
         <StatusBar barStyle="light-content"/>
-        <AppRoutes />
+        {/* <AppRoutes /> */}
+        <SignIn/>
       </NavigationContainer>
     </ThemeProvider>
   );
