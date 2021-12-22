@@ -7,12 +7,21 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { Footer } from '../../components/HighlightCard/styles';
 import { SignInSocialButton } from '../../components/SignInSocialButton';
 import { useAuth } from '../../hooks/auth';
+import { Alert } from 'react-native';
 
 
 export function SignIn(){
-    const {user} = useAuth();
-    console.log(user);
-    
+    const { signInWithGoogle } = useAuth();
+
+    async function handleSignInWithGoogle() {
+        try {
+            await signInWithGoogle()
+        } catch (error) {
+            console.log(error);
+            Alert.alert('Nāo foi possivel conectar com o Google');
+        }
+    }
+
     return(
         <S.Container>
             <S.Header>
@@ -33,7 +42,11 @@ export function SignIn(){
             </S.Header>
             <S.Footer>
                 <S.FooterWrapper>
-                    <SignInSocialButton title="Entrar com Google" svg={GoogleSvg}/>
+                    <SignInSocialButton
+                        title="Entrar com Google" 
+                        svg={GoogleSvg} 
+                        onPress={handleSignInWithGoogle}
+                    />
                     <SignInSocialButton title="Entrar com Apple" svg={AppleSvg}/>
                 </S.FooterWrapper>
             </S.Footer>
