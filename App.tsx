@@ -2,10 +2,10 @@ import React from 'react';
 import AppLoading from 'expo-app-loading';
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
-import { AppRoutes } from './src/routes/app.routes';
 import { ThemeProvider } from 'styled-components';
 import theme from './src/global/styles/theme';
 import { NavigationContainer } from '@react-navigation/native';
+import { AuthProvider } from './src/hooks/auth';
 
 import { SignIn } from './src/screens/SignIn';
 
@@ -31,7 +31,9 @@ export default function App() {
       <NavigationContainer>
         <StatusBar barStyle="light-content"/>
         {/* <AppRoutes /> */}
-        <SignIn/>
+        <AuthProvider>
+          <SignIn/>
+        </AuthProvider>
       </NavigationContainer>
     </ThemeProvider>
   );
